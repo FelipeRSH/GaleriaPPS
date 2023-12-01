@@ -1,0 +1,53 @@
+{
+  "usuarios": [
+    {
+      "email": "usuario1@teste.com",
+      "senha": "senha123",
+      "permissao": 1
+    },
+    {
+      "email": "usuario2@teste.com",
+      "senha": "senha456",
+      "permissao": 1
+    }
+  ],
+  "alunos": [
+    {
+      "id": "53bc0a62-c15e-42da-afa6-8308b930f05a",
+      "nome": "Felipe",
+      "turmas": [
+        "História",
+        " Ciências "
+      ]
+    },
+    {
+      "id": "2471d6fd-e75c-4d21-965c-15fa40d8d04c",
+      "nome": "Rafael",
+      "turmas": [
+        "Literatura",
+        " Matématica"
+      ]
+    }
+  ],
+  "turmas": [
+    {
+      "cod_aluno": 1,
+      "descricao": "Matemática",
+      "sala": "A101"
+    },
+    {
+      "cod_aluno": 2,
+      "descricao": "Ciências",
+      "sala": "B202"
+    }
+  ],
+  "produtos": [
+    {
+      "id": "bb1cb6b9-1de6-4dad-ae61-bd6b5d118f59",
+      "categoria": "Nova",
+      "descricao": "Produto Novo",
+      "quantidade": "2",
+      "armazem": "Almoxarife001"
+    }
+  ]
+}

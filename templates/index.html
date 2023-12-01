@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Apps</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(350deg, rgb(8, 98, 114), white);
+            margin: 0;
+        }
+
+        .card {
+            width: 100%; 
+            max-width: 300px; 
+            background-color: #fff; 
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            margin: 10px; 
+            cursor: pointer;
+        }
+
+        .card-header i {
+            font-size: 48px; 
+            color: rgb(2, 161, 130); 
+            text-align: center;
+        }
+
+        .card-header {
+            text-align: center;
+            justify-content: center;
+            padding: 20px; 
+        }
+
+        .card-body {
+            padding: 20px; 
+            text-align: center;
+        }
+
+        .app-icon {
+            font-size: 36px; 
+        }
+
+        .app-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .app-description {
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row align-items-center text-center container-fluid text-center justify-content-center align-items-center">
+        <div class="col-md-12 col-lg-3 ">
+            <div class="card" onclick="openAplicativo('app-alunos')">
+                <div class="card-header">
+                    <i class="fas fa-camera-retro app-icon"></i>
+                </div>
+                <div class="card-body">
+                    <div class="app-name">Alunos App</div>
+                    <div class="app-description">Guarde informações de alunos e suas turmas.</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card"  onclick="openAplicativo('app-produtos')">
+                <div class="card-header">
+                    <i class="fas fa-box app-icon"></i>
+                </div>
+                <div class="card-body">
+                    <div class="app-name">Produtos App</div>
+                    <div class="app-description">Sistema de gestão de produtos, incluindo quantidade e depósito.</div>
+                </div>
+            </div>        
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card" onclick="openAplicativo('app-cep')">
+                <div class="card-header">
+                    <i class="fas fa-map-marker-alt app-icon"></i>
+                </div>
+                <div class="card-body">
+                    <div class="app-name">CEP</div>
+                    <div class="app-description">Obtenha dados de endereço apartir do CEP informado.</div>
+                </div>
+            </div>        
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="card" onclick="openAplicativo('app-cnpj')">
+                <div class="card-header">
+                    <i class="fas fas fa-building app-icon"></i>
+                </div>
+                <div class="card-body">
+                    <div class="app-name">CNPJ</div>
+                    <div class="app-description">Obtenha dados da empresa apartir do CNPJ informado.</div>
+                </div>
+            </div>      
+        </div>
+    </div>
+
+
+ 
+
+
+
+ 
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXKZA1/4CMpX9a/A9b++UQbSSUnQlmh/jN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyklAe0a/JK7gBA5aF6PViL+6C1bXbKtW"
+        crossorigin="anonymous"></script>
+</body>
+<script>
+
+    const openAplicativo = (app) => window.location.href = app
+</script>
+</html>

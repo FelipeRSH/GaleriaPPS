@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Produtos</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+ 
+
+        body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        cursor: pointer;
+        padding: 50px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 32px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-control {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 30px;
+        border-collapse: collapse;
+    }
+    .reset-btn {
+        background-color: red;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        float: right;
+        margin-top: 10px;
+        position: absolute;
+        top: 0;
+        right: 5px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+        font-size: 15px;
+        color: rgb(0, 0, 0);
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    #resultado {
+        margin-top: 20px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .table th i,
+    .table td i {
+        margin-right: 5px;
+    }
+
+    .table th i {
+        color: #007bff; /* blue */
+    }
+
+    .table th i,
+    .table td i.fa-user-tie {
+        color: #ffc107; 
+    }
+
+    .table th i.fa-file-alt {
+        color: #17a2b8; 
+    }
+
+    .table th i.fa-building,
+    .table td i.fa-store-alt {
+        color: #28a745;
+    }
+
+    .table th i.fa-money-bill-wave,
+    .table td i.fa-balance-scale {
+        color: #dc3545;
+    }
+
+    .table th i.fa-id-badge {
+        color: #6c757d; 
+    }
+    body{
+        background-repeat: no-repeat;
+    }
+    #imagePopup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+#imagePopup img {
+  max-width: 100%;
+  height: auto;
+}  footer {
+        background-color: #343a40; 
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);  
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: sticky;
+        bottom: 0;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="mb-4">CRUD - Produtos</h2>
+
+        <form id="formProduto">
+            <div class="form-row row">
+                <br>
+                <div class="col-md-12 mb-2">
+                    <input type="text" class="form-control" placeholder="Categoria" id="categoriaProduto" required>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <input type="text" class="form-control" placeholder="Descrição" id="descricaoProduto" required>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <input type="number" class="form-control" placeholder="Quantidade" id="quantidadeProduto" required>
+                </div>
+                <div class="col-md-12 mb-2">
+                    <select class="form-control" id="armazemProduto" required>
+                        <option value="" disabled selected>Selecione um Armazém</option>
+                        <option value="Almoxarife001">Almoxarife001</option>
+                        <option value="Centro002">Centro002</option>
+                    </select>
+                </div>
+                <br>
+            </div>
+            <button type="button" class="btn btn-outline-success mt-2 mb-2" onclick="adicionarProduto()">Adicionar Produto</button>
+        </form>
+
+        <!-- Tabela para listar produtos -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Armazém</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaProdutos">
+            </tbody>
+        </table>
+
+        <!-- Edição - Modal -->
+        <div class="modal" id="editProdutoModal" tabindex="-1" role="dialog" aria-labelledby="editProdutoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProdutoModalLabel">Editar Produto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row row">
+                            <div class="col-md-12 mb-2">
+                                <input type="text" class="form-control" placeholder="Categoria" id="editCategoriaProduto" required>
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="text" class="form-control" placeholder="Descrição" id="editDescricaoProduto" required>
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="number" class="form-control" placeholder="Quantidade" id="editQuantidadeProduto" required>
+                            </div>
+                            <div class="col-md-12 mb-2">       
+                                
+                                <select class="form-control" id="editArmazemProduto" required>
+                                <option value="" disabled selected>Selecione um Armazém</option>
+                                <option value="Almoxarife001">Almoxarife001</option>
+                                <option value="Centro002">Centro002</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="hideEditProdutoModal()">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="atualizarProduto()">Salvar Alterações</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="fixed-bottom text-center mt-5">
+    
+        <button class="btn btn-success" onclick="voltar()">    <i class="fas fa-arrow-left"></i>
+            Voltar ao Menu de Aplicativos</button>
+        </footer>
+
+        <script>
+            function voltar() {
+                window.location.href = "/";
+            }
+        </script>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.7.1.slim.js" integrity="sha256-UgvvN8vBkgO0luPSUl2s8TIlOSYRoGFAX4jlCIm9Adc=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXKZA1/4CMpX9a/A9b++UQbSSUnQlmh/jN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+<script>
+    
+async function adicionarProduto() {
+    var categoria = document.getElementById('categoriaProduto').value;
+    var descricao = document.getElementById('descricaoProduto').value;
+    var quantidade = document.getElementById('quantidadeProduto').value;
+    var armazem = document.getElementById('armazemProduto').value;
+
+    if (!categoria.trim() || !descricao.trim() || !quantidade.trim() || !armazem.trim()) {
+        alert('Todos os campos são obrigatórios.');
+        return;
+    }
+    if (isNaN(quantidade) || parseInt(quantidade) <= 0) {
+        alert('A quantidade deve ser um número maior que zero.');
+        return;
+    }
+
+    const allowedArmazens = ['Almoxarife001', 'Centro002'];
+    if (!allowedArmazens.includes(armazem)) {
+        alert('Selecione um armazém válido.');
+        return;
+    }
+    try {
+        const response = await fetch('/produtos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ categoria, descricao, quantidade, armazem }),
+        });
+
+        if (response.ok) {
+            const produto = await response.json();
+            adicionarLinhaTabelaProduto(produto);
+        } else {
+            console.error('Erro ao adicionar produto:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro ao adicionar produto:', error.message);
+    }
+}
+
+async function removerProduto(button) {
+    var row = button.parentNode.parentNode;
+    var produtoId = row.cells[0].innerText;
+
+    try {
+        const response = await fetch(`/produtos/${produtoId}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            row.parentNode.removeChild(row);
+        } else {
+            console.error('Erro ao remover produto:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro ao remover produto:', error.message);
+    }
+}
+
+async function carregarProdutos() {
+    try {
+        const response = await fetch('/produtos');
+
+        if (response.ok) {
+            const produtos = await response.json();
+            produtos.forEach(adicionarLinhaTabelaProduto);
+        } else {
+            console.error('Erro ao obter produtos:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro ao obter produtos:', error.message);
+    }
+}
+
+function adicionarLinhaTabelaProduto(produto) {
+    var tabelaProdutos = document.getElementById('tabelaProdutos');
+    var newRow = tabelaProdutos.insertRow(tabelaProdutos.rows.length);
+
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+    var cell3 = newRow.insertCell(2);
+    var cell4 = newRow.insertCell(3);
+    var cell5 = newRow.insertCell(4);
+    var cell6 = newRow.insertCell(5);
+
+    cell1.innerHTML = produto.id;
+    cell2.innerHTML = produto.categoria;
+    cell3.innerHTML = produto.descricao;
+    cell4.innerHTML = produto.quantidade;
+    cell5.innerHTML = produto.armazem;
+    cell6.innerHTML = '<button class="btn btn-danger btn-sm" onclick="removerProduto(this)">Remover</button>    <button class="btn btn-warning btn-sm" onclick="editarProduto(this)">Editar</button>';
+}
+
+function showEditProdutoModal() {
+    var editProdutoModal = document.getElementById('editProdutoModal');
+    editProdutoModal.classList.add('show');
+    editProdutoModal.style.display = 'block';
+    document.body.classList.add('modal-open');
+}
+
+function hideEditProdutoModal() {
+    var editProdutoModal = document.getElementById('editProdutoModal');
+    editProdutoModal.classList.remove('show');
+    editProdutoModal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+async function editarProduto(button) {
+    var rows = document.querySelectorAll('#tabelaProdutos tr');
+    rows.forEach(row => row.classList.remove('active'));
+
+    var row = button.parentNode.parentNode;
+    row.classList.add('active');
+
+    var produtoId = row.cells[0].innerText;
+    var categoria = row.cells[1].innerText;
+    var descricao = row.cells[2].innerText;
+    var quantidade = row.cells[3].innerText;
+    var armazem = row.cells[4].innerText;
+
+    document.getElementById('editCategoriaProduto').value = categoria;
+    document.getElementById('editDescricaoProduto').value = descricao;
+    document.getElementById('editQuantidadeProduto').value = quantidade;
+    document.getElementById('editArmazemProduto').value = armazem;
+
+    showEditProdutoModal();
+}
+
+async function atualizarProduto() {
+    var categoria = document.getElementById('editCategoriaProduto').value;
+    var descricao = document.getElementById('editDescricaoProduto').value;
+    var quantidade = document.getElementById('editQuantidadeProduto').value;
+    var armazem = document.getElementById('editArmazemProduto').value;
+    if (isNaN(quantidade) || parseInt(quantidade) <= 0) {
+        alert('A quantidade deve ser um número maior que zero.');
+        return;
+    }
+
+    const allowedArmazens = ['Almoxarife001', 'Centro002'];
+    if (!allowedArmazens.includes(armazem)) {
+        alert('Selecione um armazém válido.');
+        return;
+    }
+    var produtoId = document.querySelector('#tabelaProdutos tr.active').cells[0].innerText;
+
+    try {
+        const response = await fetch(`/produtos/${produtoId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ categoria, descricao, quantidade, armazem }),
+        });
+
+        if (response.ok) {
+            var editedRow = document.querySelector('#tabelaProdutos tr.active');
+            editedRow.cells[1].innerText = categoria;
+            editedRow.cells[2].innerText = descricao;
+            editedRow.cells[3].innerText = quantidade;
+            editedRow.cells[4].innerText = armazem;
+
+            hideEditProdutoModal();
+        } else {
+            console.error('Erro ao atualizar produto:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar produto:', error.message);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', carregarProdutos);
+</script>
+</html>
+
+
+
+<!DOCTYPE html>

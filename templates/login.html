@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(350deg,rgb(8, 98, 114) ,white ); 
+            margin: 0; 
+        }
+
+        .card {
+            width: 100%; 
+            max-width: 400px;
+            background-color: #fff; 
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+
+        .card-header i {
+            font-size: 48px; 
+            color: rgb(2, 161, 130); 
+            text-align: center;
+        }
+        .card-header {
+            text-align: center;
+            justify-content: center;
+
+        }
+        .card-header h4 {
+            text-align: center;
+            font-size: 24px; 
+            margin: 10px 0; 
+        }
+
+        .card-body {
+            padding: 20px; 
+        }
+
+        .form-group {
+            margin-bottom: 20px; 
+        }
+
+        label {
+            font-size: 16px; 
+            color: #333;
+        }
+
+        input {
+            height: 45px; 
+            font-size: 16px;
+        }
+
+        button {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header text-center justify-content-center">
+            <i class="fas fa-user-circle"></i>
+            <h4 class="mt-2 text-center justify-content-center ">Login</h4>
+        </div>
+        <div class="card-body text-center ">
+            <form action="/login" method="post">
+                <div class="form-group text-start ">
+                    <label for="email">Email:</label>
+                    <input  value="usuario1@teste.com" placeholder="usuario1@teste.com" type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group text-start">
+                    <label for="senha">Senha:</label>
+                    <input value="senha123" placeholder="senha123" type="password" class="form-control" id="senha" name="senha" required>
+                </div>
+                <button type="submit" class="btn justify-content-center btn-outline-success btn-block text-center">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXKZA1/4CMpX9a/A9b++UQbSSUnQlmh/jN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyklAe0a/JK7gBA5aF6PViL+6C1bXbKtW"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

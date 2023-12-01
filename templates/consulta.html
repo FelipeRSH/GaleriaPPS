@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pesquisa de CNPJ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+</head>
+<style>
+  body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .container {
+        cursor: pointer;
+        padding: 50px;
+        background-color: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        font-size: 32px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .form-control {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 30px;
+        border-collapse: collapse;
+    }
+    .reset-btn {
+        background-color: red;
+        color: white;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        float: right;
+        margin-top: 10px;
+        position: absolute;
+        top: 0;
+        right: 5px;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+        font-size: 15px;
+        color: rgb(0, 0, 0);
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    #resultado {
+        margin-top: 20px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .table th i,
+    .table td i {
+        margin-right: 5px;
+    }
+
+    .table th i {
+        color: #007bff; /* blue */
+    }
+
+    .table th i,
+    .table td i.fa-user-tie {
+        color: #ffc107; 
+    }
+
+    .table th i.fa-file-alt {
+        color: #17a2b8; 
+    }
+
+    .table th i.fa-building,
+    .table td i.fa-store-alt {
+        color: #28a745;
+    }
+
+    .table th i.fa-money-bill-wave,
+    .table td i.fa-balance-scale {
+        color: #dc3545;
+    }
+
+    .table th i.fa-id-badge {
+        color: #6c757d; 
+    }
+    body{
+        background-repeat: no-repeat;
+    }
+    #imagePopup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+#imagePopup img {
+  max-width: 100%;
+  height: auto;
+}  footer {
+        background-color: #343a40; 
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);  
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: sticky;
+        bottom: 0;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+</style>
+<body  class="custom-body">
+      
+    <div class="container">
+          <h2 class="text-center mb-3">
+            Consultar CNPJ
+          </h2>
+
+        <div class="input-group mb-3">
+          
+            <input type="text" id="cnpjInput" class="form-control" placeholder="Digite o CNPJ">
+            <br>
+            <button onclick="consultarCNPJ()" class="btn btn-dark">Consultar</button>
+           
+            
+        </div>
+
+        <div class="row">
+
+            <label for="planoDeFundoInput" class="">Selecionar Plano de Fundo</label>
+            <input type="file" class="" id="planoDeFundoInput" accept="image/*">
+
+        </div>
+        <div id="resultado"></div>
+        <div id="accordionContainer"></div>
+        <div id="imagePopup">
+            <img src="https://usagif.com/wp-content/uploads/gifs/owl-74.gif" alt="Easter Egg Image">
+        </div>
+
+          
+        <div class="table-responsive">
+            <table class="table mt-5">
+                <thead class="table-white">
+                    <tr>
+                        <th><i class="fas fa-building"></i> CNPJ Raiz</th>
+                        <td id="cnpj"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-file-alt"></i> Razão Social</th>
+                        <td id="razaoSocial"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-money-bill-wave"></i> Capital Social</th>
+                        <td id="capital"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-user-tie"></i> Responsável Federativo</th>
+                        <td id="responsavelFederativo"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-calendar-alt"></i> Última Atualização</th>
+                        <td id="ultimaAtualizacao"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-id-badge"></i> Qualificação do Responsável</th>
+                        <td id="qualificacaoResponsavel"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-building"></i> Porte da Empresa</th>
+                        <td id="porteEmpresa"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-money-check-alt"></i> Optante pelo Simples Nacional</th>
+                        <td id="optanteSimples"></td>
+                    </tr>
+                    <tr id="hid_mei" style="display:hidden">
+                        <th><i class="fas fa-user"></i> MEI</th>
+                        <td id="parceiroMEI"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-store-alt"></i> Estabelecimento</th>
+                        <td id="estabelecimento"></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-balance-scale"></i> Natureza Jurídica</th>
+                        <td id="naturezaJuridica"></td>
+                    </tr>
+                </thead>
+            </table>
+            <div class="table-responsive">
+                <table class="table mt-5">
+                    <thead class="table-white">
+                        <tr>
+                            <th>Inscrição Estadual</th>
+                            <th>status</th>
+                            <th>Última Atualização</th>
+                        </tr>
+                        <tr>
+                            <td id="inscricao_estado"></td>
+                            <td id="inscricao_status"></td>
+                            <td id="atualizado_dia"></td>
+                        </tr>
+                    </thead>
+                </table>
+        </div>
+    
+        <div class="table-responsive">
+            <table id="sociosGrid" class="table mt-5">
+                <thead class="table">
+                    <tr>
+                        <th>CPF/CNPJ</th>
+                        <th>Nome</th>
+                        <th>Tipo</th>
+                        <th>Data de Entrada</th>
+                        <th>CPF Representante Legal</th>
+                        <th>Nome Representante</th>
+                        <th>Faixa Etária</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    
+        <div class="table-responsive">
+            <table id="companyTable" class="table mt-5">
+                <thead class="tabl" id="estabelec">
+                    <tr>
+                        <th colspan="2" class="text-center">Informações Estabelecimento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Propriedades</th>
+                        <td>Valor</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <footer class="fixed-bottom text-center mt-5">
+    </i>
+    <button class="btn btn-success" onclick="voltar()">    <i class="fas fa-arrow-left"></i>
+        Voltar ao Menu de Aplicativos</button>
+    </footer>
+
+    <script>
+        function voltar() {
+            window.location.href = "/";
+        }
+    </script>
+</body>
+<script>
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+}
+const exibirData = (dataGeral) =>{
+    if (dataGeral.simples == null || dataGeral.simples == false){
+        dataGeral.simples = 'Não Optante'
+    }
+    else {
+        dataGeral.simples = dataGeral.simples.simples +", Desde: "+formatDate(dataGeral.simples.data_opcao_simples)+"<br>Atualização: "+formatDate(dataGeral.atualizado_em)
+        if(dataGeral.simples.mei == "Não" ){
+            document.getElementById('hid_mei').innerHTML =  "<tr id='hid_mei'><th>MEI</th><td id=''>"+dataGeral.simples.mei+"<br>Atualização: "+formatDate(dataGeral.simples.atualizado_em)+"</td></tr>"
+        }
+        else if (dataGeral.simples.mei != "Não" && dataGeral.simples.mei != null){
+            document.getElementById('hid_mei').innerHTML =  "<tr id='hid_mei'><th>MEI</th><td id=''>"+dataGeral.simples.mei+"<br>Atualização: "+formatDate(dataGeral.simples.atualizado_em)+"</td></tr><tr><th>Data Opção MEI:"+formatDate(dataGeral.simples.data_opcao_mei)+"</th></tr><tr><th>Data Exclusão MEI:"+formatDate(dataGeral.simples.data_exclusao_mei)+"</th></tr>"
+        }
+    }
+    var cnpj = dataGeral.cnpj_raiz;
+    var razao_social = dataGeral.razao_social;
+    var capital = 'R$ '+dataGeral.capital_social;
+    var responsavel_federativo = (dataGeral.responsavel_federativo) ? dataGeral.responsavel_federativo : 'Indefinido'
+    var ultimaAtualizacao = formatDate(dataGeral.atualizado_em)
+    var qualificacao_do_responsavel = (dataGeral.qualificacao_do_responsavel) ? dataGeral.qualificacao_do_responsavel.descricao : "Indefinido"
+    var porte_empresa = dataGeral.porte.descricao
+    var optanteSimples = dataGeral.simples
+    var estabelecimento = dataGeral.estabelecimento;
+    var natureza_juridica = dataGeral.natureza_juridica;
+    var inscricaoEstado = dataGeral.estabelecimento.inscricoes_estaduais.filter(e => e.estado.sigla == dataGeral.estabelecimento.estado.sigla);
+
+    if (inscricaoEstado.length > 0) {
+    var inscricaoEstadoText = "";
+    inscricaoEstado.forEach(function(inscricao, index) {
+    document.getElementById('inscricao_estado').innerHTML += inscricao.inscricao_estadual;
+    document.getElementById('atualizado_dia').innerHTML += formatDate(inscricao.atualizado_em);
+    document.getElementById('inscricao_status').innerHTML += (inscricao.ativo ? "<span class='text-success'> Ativo </span>" : " <span class='text-danger' > Inativo </span>");
+        if (index < inscricaoEstado.length - 1) {
+      document.getElementById('inscricao_estado').innerHTML += "<hr>";
+      document.getElementById('atualizado_dia').innerHTML += "<hr>";
+      document.getElementById('inscricao_status').innerHTML += "<hr>";
+    }
+  });
+} else {
+  document.getElementById('inscricao_estado').textContent = '-';
+  document.getElementById('atualizado_dia').textContent = '-';
+  document.getElementById('inscricao_status').textContent = '-';
+}
+
+    
+
+    document.getElementById('cnpj').textContent = cnpj;
+    document.getElementById('razaoSocial').textContent = razao_social;
+    document.getElementById('capital').textContent = capital;
+    document.getElementById('responsavelFederativo').textContent = responsavel_federativo;
+    document.getElementById('ultimaAtualizacao').textContent = ultimaAtualizacao;
+    document.getElementById('qualificacaoResponsavel').textContent = qualificacao_do_responsavel ;
+    document.getElementById('porteEmpresa').textContent = porte_empresa;
+    document.getElementById('optanteSimples').innerHTML = optanteSimples;
+    document.getElementById('estabelecimento').innerHTML = '<a href="#estabelec">Estabelecimento </a>';
+    document.getElementById('naturezaJuridica').textContent =  natureza_juridica.id +' - '+natureza_juridica.descricao;
+
+    var socios = dataGeral.socios
+    var tableBody = document.querySelector('#sociosGrid tbody');
+    for(socio of socios)
+    {
+    var row = document.createElement('tr');
+
+    var properties = [
+
+        { label: 'CPF/CNPJ', property: 'cpf_cnpj_socio' },
+        { label: 'Nome', property: 'nome' },
+        { label: 'Tipo', property: 'tipo' },
+        { label: 'Data de Entrada', property: 'data_entrada' },
+        { label: 'CPF Representante Legal', property: 'cpf_representante_legal' },
+        { label: 'Nome Representante', property: 'nome_representante' },
+        { label: 'Faixa Etaria', property: 'faixa_etaria' },
+        ];
+
+        properties.forEach(function(property) {
+        var cell = document.createElement('td');
+        cell.textContent = socio[property.property];
+        row.appendChild(cell);
+    });
+
+    tableBody.appendChild(row);
+    }
+
+    var table = document.getElementById("companyTable");
+
+    function formatNestedObjects(obj) {
+    if (typeof obj === 'object' && obj !== null) {
+
+        return JSON.stringify(obj, null, '\n').replaceAll('"', '').replaceAll('{', '').replaceAll('}', '').replaceAll(',', '');
+        } else {
+            return obj;
+        }
+    }
+
+    function createAccordion(title, content) {
+    var accordion = document.createElement('details');
+        accordion.innerHTML = `
+            <summary>${title}</summary>
+            <pre>${content}</pre>
+        `;
+        return accordion;
+    }
+
+for (var prop in estabelecimento) {
+  if (estabelecimento.hasOwnProperty(prop)) {
+    var propName = prop;
+    var propValue = formatNestedObjects(estabelecimento[prop]);
+
+    if (Array.isArray(estabelecimento[prop])) {
+        var row = table.insertRow();
+
+        var propNameCell = row.insertCell();
+        var propValueCell = row.insertCell();
+
+        var accordionTitle = propName;
+        var accordionContent = '';
+        
+        for (var i = 0; i < estabelecimento[prop].length; i++) {
+            accordionContent += formatNestedObjects(estabelecimento[prop][i]).replaceAll('true','<pre style="color:green">SIM</pre>').replaceAll('false','<pre style="color:red">NÃO</pre>') ;
+            
+        }
+
+        var accordion = createAccordion(accordionTitle, accordionContent);
+        propValueCell.appendChild(accordion);
+    } else {
+        
+        var row = table.insertRow();
+
+        var propNameCell = row.insertCell();
+        var propValueCell = row.insertCell();
+
+        propNameCell.textContent = propName;
+
+        propValueCell.textContent = (propValue) ? propValue : '-';
+        
+    }
+  }
+}
+function applyBootstrapClasses() {
+  var container = document.querySelector('.container');
+  container.classList.add('container-fluid');
+
+  var inputGroup = document.querySelector('.input-group');
+  inputGroup.classList.add('mb-3');
+
+  var cnpjInput = document.getElementById('cnpjInput');
+  cnpjInput.classList.add('form-control');
+
+  var consultarBtn = document.querySelector('button');
+  consultarBtn.classList.add('btn', 'btn-primary');
+
+  var tables = document.querySelectorAll('table');
+  tables.forEach(function(table) {
+    table.classList.add('table', 'mt-5');
+  });
+
+  var tableHeaders = document.querySelectorAll('thead');
+  tableHeaders.forEach(function(header) {
+    header.classList.add('table-outline-success');
+  });
+
+  var tableResponsiveDivs = document.querySelectorAll('.table-responsive');
+  tableResponsiveDivs.forEach(function(div) {
+    div.classList.add('mb-3');
+  });
+
+  var accordionContainer = document.getElementById('accordionContainer');
+  accordionContainer.classList.add('mb-3');
+
+  var resultadoContainer = document.getElementById('resultado');
+  resultadoContainer.classList.add('mb-3');
+
+  var headings = document.querySelectorAll('h1');
+  headings.forEach(function(heading) {
+    heading.classList.add('text-center');
+  });
+
+  var titles = document.querySelectorAll('.title');
+  titles.forEach(function(title) {
+    title.classList.add('text-center');
+  });
+  
+}
+
+window.addEventListener('DOMContentLoaded', applyBootstrapClasses);
+}
+function atualizarPlanoDeFundo() {
+  if (localStorage.getItem('planoDeFundo')) {
+    console.log(localStorage.getItem('planoDeFundo'))
+    if(localStorage.getItem('planoDeFundo').length>10){
+        var resetButton = document.createElement('button');
+        resetButton.classList.add('reset-btn');
+        resetButton.innerText = 'X'
+        resetButton.addEventListener('click',resetBg)
+        document.querySelector('body').appendChild(resetButton);    
+    }
+    var planoDeFundo = localStorage.getItem('planoDeFundo');
+    document.body.style.background = planoDeFundo;
+  }
+}
+function resetBg() {
+  document.body.style.backgroundImage = 'none';
+  localStorage.removeItem('planoDeFundoUrl');
+}
+document.getElementById('planoDeFundoInput').addEventListener('change', handleFileSelect);
+    window.addEventListener('DOMContentLoaded', atualizarPlanoDeFundo);
+    window.addEventListener('beforeunload', function() {
+      var planoDeFundoAtual = document.body.style.backgroundImage;
+      localStorage.setItem('planoDeFundo', planoDeFundoAtual);
+    });
+function handleFileSelect(event) {
+  var file = event.target.files[0];
+
+  if (file) {
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      var planoDeFundoUrl = e.target.result;
+      localStorage.setItem('planoDeFundoUrl', planoDeFundoUrl);
+
+      document.body.style.backgroundImage = `url(${planoDeFundoUrl})`;
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+document.getElementById('planoDeFundoInput').addEventListener('change', handleFileSelect);
+
+window.addEventListener('DOMContentLoaded', atualizarPlanoDeFundo);
+
+window.addEventListener('beforeunload', function() {
+  var planoDeFundoAtual = document.body.style.backgroundImage;
+  localStorage.setItem('planoDeFundo', planoDeFundoAtual);
+});
+function showEasterEgg() {
+  const sequence = [];
+  const secretSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft'];
+
+  document.addEventListener('keydown', (event) => {
+    sequence.push(event.key);
+    sequence.splice(-secretSequence.length - 1, sequence.length - secretSequence.length);
+    
+    if (sequence.join('') === secretSequence.join('')) {
+      const imagePopup = document.getElementById('imagePopup');
+      imagePopup.style.display = 'block';
+
+      setTimeout(() => {
+        imagePopup.style.display = 'none';
+      }, 3000);
+    }
+  });
+}
+function consultarCNPJ() {
+  var cnpj = document.getElementById('cnpjInput').value.replaceAll('.', '').replaceAll('-', '').replaceAll('/', '');
+  var url = '/cnpj?cnpj=' + cnpj;
+  var payload = {};
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+
+  xhr.onreadystatechange = function() {
+    var planoDeFundoUrl = localStorage.getItem('planoDeFundoUrl');
+    if (planoDeFundoUrl) {
+        document.body.style.backgroundImage = `url(${planoDeFundoUrl})`;
+    }
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (xhr.status === 200) {
+        var dataGeral = JSON.parse(xhr.responseText);
+        exibirData(dataGeral);
+      }
+       
+      else {
+        if (xhr.status == 429) {
+            var dataAtual = new Date();
+            var detalhes = xhr.responseText;
+            var detalhesObj = JSON.parse(detalhes);
+            var detalhesString = detalhesObj.detalhes;
+
+            var dataRegex = /Liberação ocorrerá em (.+)/;
+            console.log(dataRegex)
+            var dataLiberacaoMatch = detalhesString.match(dataRegex);
+            var dataLiberacaoString = dataLiberacaoMatch[1];
+
+            var dataLiberacao = new Date(dataLiberacaoString);
+
+            var diferencaSegundos = Math.floor((dataLiberacao - dataAtual) / 1000);
+
+            var mensagem = "Você poderá refazer a consulta em " + diferencaSegundos + " segundos.";
+            
+          document.getElementById('resultado').innerHTML = mensagem;
+        }
+      }
+    }
+  };
+
+  xhr.send(JSON.stringify(payload));
+}
+
+</script>
+<script>
+    showEasterEgg();
+</script>
+</html>
